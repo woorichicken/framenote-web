@@ -37,3 +37,5 @@ Thumbs.db
 
 # 데모 녹화 산출물
 demo-out/
+.framenote/
+.vercel

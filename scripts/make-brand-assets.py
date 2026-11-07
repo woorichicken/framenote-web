@@ -21,17 +21,19 @@ mark = Image.open(ROOT / "brand/mark.png").convert("RGBA")
 
 # 탭·머리 로고는 바탕 없이 — 16px 시험에서 이쪽이 가장 또렷했다 (shots/logo-small-test.png)
 mark.save(ROOT / "app/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-mark.resize((192, 192), Image.LANCZOS).save(ROOT / "app/icon.png")
+mark.resize((192, 192), Image.Resampling.LANCZOS).save(ROOT / "app/icon.png")
 
 # iOS 는 투명을 검게 칠하므로 앱 아이콘만 꽉 찬 면 위에 얹는다
 APPLE_SIZE = 180
 APPLE_MARK = 148
 apple = Image.new("RGBA", (APPLE_SIZE, APPLE_SIZE), CREAM + (255,))
-inner = mark.resize((APPLE_MARK, APPLE_MARK), Image.LANCZOS)
+inner = mark.resize((APPLE_MARK, APPLE_MARK), Image.Resampling.LANCZOS)
 apple.alpha_composite(inner, ((APPLE_SIZE - APPLE_MARK) // 2, (APPLE_SIZE - APPLE_MARK) // 2))
 apple.convert("RGB").save(ROOT / "app/apple-icon.png")
 
 # 벡터로 못 옮기는 클레이 그림이라 작은 WebP 를 SVG 안에 넣는다 — 요청 하나로 어디서나 같은 그림
+# 파일을 그대로 읽으면 mark.png 를 바꿔도 머리 로고만 옛 그림으로 남는다
+mark.resize((128, 128), Image.Resampling.LANCZOS).save(ROOT / "brand/mark-128.webp", quality=88)
 webp = base64.b64encode((ROOT / "brand/mark-128.webp").read_bytes()).decode()
 svg = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="64" height="64">'
@@ -42,7 +44,7 @@ svg = (
 
 # 공유 카드 — 이름은 그림이 아니라 글자로
 card = Image.new("RGBA", OG_SIZE, CREAM + (255,))
-big = mark.resize((340, 340), Image.LANCZOS)
+big = mark.resize((340, 340), Image.Resampling.LANCZOS)
 card.alpha_composite(big, (84, 145))
 draw = ImageDraw.Draw(card)
 draw.text((480, 190), "framenote", font=ImageFont.truetype(FONT_PATH, 92, index=BOLD_FACE_INDEX), fill=INK)

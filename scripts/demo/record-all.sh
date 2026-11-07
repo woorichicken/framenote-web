@@ -2,7 +2,8 @@
 # 데모 3편을 찍는다. 한 heavy-run 작업 안에서 서버 띄우기 → 녹화 → 정확한 PID 로 닫기까지 한다.
 # 사용: heavy-run -- zsh scripts/demo/record-all.sh <빈 출력 폴더>
 set -u
-OUT=${1:?출력 폴더가 필요합니다}
+# 상대 경로면 file:// 주소가 깨지므로 처음에 절대 경로로 바꾼다
+OUT=${${1:?출력 폴더가 필요합니다}:A}
 HERE=${0:A:h}
 SCENARIO=$HERE/../demo-scenario.mjs
 SOURCE_REPO=$HOME/Downloads/framenote
@@ -23,7 +24,9 @@ wait_port() { for i in {1..40}; do curl -s -o /dev/null "http://127.0.0.1:$1/api
 node "$FRAMENOTE" "$OUT/work/sample/final.mp4" --no-open --port $MAIN_PORT > "$OUT/server-main.log" 2>&1 &
 SERVER_PID=$!
 wait_port $MAIN_PORT || { echo "서버 안 뜸"; kill $SERVER_PID; exit 13; }
-node "$HERE/demo-agent.mjs" "$OUT/work/sample" "$OUT/work/sample/final-fixed.mp4" > "$OUT/agent.log" 2>&1 &
+# framenote 는 영상에서 위로 올라가 만난 git 최상단에 .framenote 를 둔다. 없으면 영상 폴더다.
+STORE_ROOT=$(git -C "$OUT/work/sample" rev-parse --show-toplevel 2>/dev/null || print -r -- "$OUT/work/sample")
+node "$HERE/demo-agent.mjs" "$STORE_ROOT" "$OUT/work/sample/final-fixed.mp4" > "$OUT/agent.log" 2>&1 &
 AGENT_PID=$!
 sleep 1
 node "$SCENARIO" main "$OUT/main" "http://127.0.0.1:$MAIN_PORT"; MAIN_EXIT=$?
@@ -41,3 +44,6 @@ node "$FRAMENOTE" "$OUT/work/static/final.mp4" --static > "$OUT/static-export.lo
 node "$SCENARIO" static "$OUT/static" "file://$OUT/work/static/final.framenote.html"; STATIC_EXIT=$?
 
 echo "EXIT main=$MAIN_EXIT ruler=$RULER_EXIT export=$EXPORT_EXIT static=$STATIC_EXIT"
+# 마지막 echo 의 0 이 그대로 나가면 빠진 영상을 성공으로 읽는다
+(( MAIN_EXIT || RULER_EXIT || EXPORT_EXIT || STATIC_EXIT )) && exit 1
+exit 0
