@@ -1,5 +1,6 @@
 "use server";
 
+import { labels } from "@/site.config"
 import { db, feedbacks, feedbackComments } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
@@ -11,7 +12,7 @@ export async function createFeedback(formData: FormData) {
   const name = formData.get("name") as string;
   const isAnonymous = formData.get("isAnonymous") === "true";
 
-  if (!content) return { error: "Content is required" };
+  if (!content) return { error: labels.feedback.errors.contentRequired };
 
   try {
     await db.insert(feedbacks).values({
@@ -25,7 +26,7 @@ export async function createFeedback(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Failed to create feedback:", error);
-    return { error: "Failed to create feedback" };
+    return { error: labels.feedback.errors.createFailed };
   }
 }
 
@@ -38,7 +39,7 @@ export async function likeFeedback(id: number) {
         where: eq(feedbacks.id, id)
     });
 
-    if (!feedback) return { error: "Feedback not found" };
+    if (!feedback) return { error: labels.feedback.errors.notFound };
 
     await db.update(feedbacks)
         .set({ likes: feedback.likes + 1 })
@@ -49,7 +50,7 @@ export async function likeFeedback(id: number) {
     return { success: true };
   } catch (error) {
     console.error("Failed to like feedback:", error);
-    return { error: "Failed to like feedback" };
+    return { error: labels.feedback.errors.likeFailed };
   }
 }
 
@@ -60,7 +61,7 @@ export async function createComment(formData: FormData) {
   const name = formData.get("name") as string;
   const isAnonymous = formData.get("isAnonymous") === "true";
 
-  if (!content || !feedbackId) return { error: "Content and Feedback ID are required" };
+  if (!content || !feedbackId) return { error: labels.feedback.errors.commentRequired };
 
   try {
     await db.insert(feedbackComments).values({
@@ -73,7 +74,7 @@ export async function createComment(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("Failed to create comment:", error);
-    return { error: "Failed to create comment" };
+    return { error: labels.feedback.errors.commentFailed };
   }
 }
 
@@ -86,6 +87,6 @@ export async function deleteFeedback(id: number) {
         return { success: true };
     } catch (error) {
         console.error("Failed to delete feedback:", error);
-        return { error: "Failed to delete feedback" };
+        return { error: labels.feedback.errors.deleteFailed };
     }
 }

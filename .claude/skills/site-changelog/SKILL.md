@@ -20,7 +20,7 @@ description: 이 프로젝트 홈페이지의 changelog 를 HTTP API 로 등록�
 ## 설정 (한 번만)
 
 ```bash
-export SITE_URL="https://<이 프로젝트 도메인>"        # TODO(create-opensource)
+export SITE_URL="https://framenote.solhun.com"
 export SITE_ADMIN_KEY="<Vercel 의 ADMIN_API_KEY 값>"
 ```
 

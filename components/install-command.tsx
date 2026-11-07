@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { install } from "@/site.config"
+import { install, labels } from "@/site.config"
 
 /**
  * 오픈소스 홈페이지에서 가장 많이 눌리는 요소.
@@ -66,7 +66,7 @@ export function InstallCommand({ id = "install" }: { id?: string }) {
         </code>
         <button
           onClick={copy}
-          aria-label={`Copy ${current.label} install command`}
+          aria-label={labels.home.copyInstall(current.label)}
           className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[rgba(55,50,47,0.06)] transition-colors"
         >
           {copied || selected ? (

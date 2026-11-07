@@ -1,36 +1,30 @@
-# CLI Manager (Solhun)
+# framenote
 
-> Manage Claude Code, Codex CLI, and Gemini CLI from a single macOS desktop dashboard.
+> 렌더된 영상에 프레임 단위로 메모를 남기고, 그 메모를 코딩 에이전트가 바로 받는 로컬 도구. MIT · npm 의존성 0.
 
-A desktop application for macOS that centralizes management of multiple CLI agents. Switch between Claude Code, Codex CLI, and Gemini CLI, organize projects in one workspace, rename agents to define their roles, and instantly switch between VS Code, Cursor, and other editors. All data is processed locally with Apple notarization for security.
+`npx framenote out/final.mp4` 로 브라우저 창을 연다. 영상 위를 끌면 프레임 구간·좌표·렌더본이 메모에 자동으로 붙는다. 「에이전트에게 보내기」를 누르면 감시 중인 에이전트가 신호를 받고, 고쳐서 다시 렌더한 경로를 알리면 같은 창에서 새 영상으로 바뀌고 보던 프레임이 유지된다. `--static` 은 서버 없이 HTML 한 장으로 내보낸다.
 
-## Core Features
+## 문서
 
-- [Agent Management](https://solhun.com): Manage Claude Code, Codex CLI, and Gemini CLI in a unified dashboard
-- [Project Organization](https://solhun.com): Organize all projects in one centralized workspace
-- [Agent Customization](https://solhun.com): Rename CLI agents to define their specific roles and purposes
-- [Editor Switching](https://solhun.com): Switch instantly between VS Code, Cursor, and other code editors
+- [README](https://github.com/woorichicken/framenote#readme): 사용법, 프레임 확정 방식, 에이전트 접점, 정적 모드
+- [저장 형식](https://github.com/woorichicken/framenote/blob/main/src/types.ts): notes.jsonl 한 줄의 모양과 메모 상태
+- [변경 기록](https://framenote.solhun.com/changelog)
+- [로드맵](https://framenote.solhun.com/roadmap)
 
-## Documentation
+## 실행
 
-- [Getting Started](https://solhun.com/docs): Installation guide and initial setup instructions
-- [Pricing](https://solhun.com/pricing): Free core features with optional premium capabilities
+- `npx framenote out/final.mp4` · `pnpm dlx framenote out/final.mp4` · `bunx framenote out/final.mp4`
+- 요구사항: Node 22 이상, 시스템의 ffmpeg·ffprobe
 
-## Resources
+## 에이전트 접점
 
-- [Gallery](https://solhun.com/gallery): Screenshots and visual demonstrations of the application
-- [Changelog](https://solhun.com/changelog): Version history and feature updates
-- [FAQ](https://solhun.com/#faq): Frequently asked questions about CLI agent management
+- 주소 찾기: `.framenote/server.json`
+- 새 묶음 신호: `ws://127.0.0.1:<port>/feed`
+- 메모 전문: `GET /api/notes?batch=<id>` 또는 `.framenote/<영상>/notes.jsonl`
+- 상태 바꾸기: `POST /api/status` — 메모 단위 목록, 반영됨에는 새 영상 경로를 함께
 
-## Technical Details
+## 지키는 것
 
-- Platform: macOS Desktop Application
-- Supported CLI Tools: Claude Code, Gemini CLI, Codex CLI, and custom CLI tools
-- Data Privacy: All data processed locally, no external data transmission
-- Security: Apple notarized application
-- Price: Free core features
-
-## Optional
-
-- Windows Support: Coming soon
-- Linux Support: Not yet on roadmap
+- 나가는 요청 없음, 서버는 127.0.0.1 에만 바인딩
+- 파일이 원본 — 서버가 죽어도 메모가 남는다
+- 커밋·푸시·최종 렌더는 하지 않는다

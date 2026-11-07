@@ -43,8 +43,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-instrument-serif);
+  --font-sans: var(--font-inter), var(--font-noto-sans-kr), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-serif: var(--font-instrument-serif), var(--font-noto-serif-kr), "Apple SD Gothic Neo", serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -130,4 +130,10 @@
 /* 확대 이미지가 열린 동안 뒤 페이지가 같이 스크롤되지 않게 한다. */
 html:has(dialog[open]) {
   overflow: hidden;
+}
+
+/* 한글은 음절마다 줄이 바뀔 수 있어 그대로 두면 「받는 / 다」처럼 끊긴다. 단어 단위로만 끊는다. */
+html[lang="ko"] body {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }

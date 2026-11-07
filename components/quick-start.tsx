@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { quickStart } from "@/site.config"
+import { quickStart, labels } from "@/site.config"
 
 /**
  * 30초 예제.
@@ -36,10 +36,10 @@ export function QuickStart() {
         </div>
         <button
           onClick={copy}
-          aria-label="Copy quick start example"
+          aria-label={labels.home.copyQuickStart}
           className="text-[rgba(255,255,255,0.5)] hover:text-white transition-colors text-xs font-medium font-sans"
         >
-          {copied ? "Copied" : "Copy"}
+          {copied ? labels.common.copied : labels.common.copy}
         </button>
       </div>
       <pre className="px-5 py-4 overflow-x-auto">

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { footer, site } from "@/site.config"
+import { footer, site, labels } from "@/site.config"
 
 function isExternal(href: string) {
   return href.startsWith("http") || href.startsWith("mailto:")
@@ -14,7 +14,7 @@ export default function FooterSection() {
           <Link href="/" className="self-stretch flex justify-start items-center gap-3">
             <img
               src={site.logo}
-              alt={`${site.name} logo`}
+              alt={labels.common.logoAlt}
               className="w-6 h-6 rounded-md object-cover border border-[rgba(55,50,47,0.08)]"
             />
             <span className="text-[#49423D] text-xl font-semibold leading-4 font-sans">
@@ -25,7 +25,7 @@ export default function FooterSection() {
             {site.tagline}
           </p>
           <p className="text-[rgba(73,66,61,0.55)] text-xs font-sans">
-            Released under the {site.license} License.
+            {labels.footer.licensed}
           </p>
         </div>
 

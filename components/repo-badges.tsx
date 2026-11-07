@@ -1,5 +1,5 @@
 import { compact, getRepoStats } from "@/lib/github"
-import { repoUrl, site } from "@/site.config"
+import { repoUrl, site, labels } from "@/site.config"
 
 /**
  * 별·포크·이슈·버전을 GitHub API 에서 실값으로 읽어 보여준다.
@@ -18,7 +18,7 @@ export async function RepoBadges() {
   if (stats) {
     // 0 은 "죽은 프로젝트"로 읽힌다 — 값이 없을 때와 같이 숨긴다.
     if (stats.stars > 0) items.push({
-      label: "stars",
+      label: labels.badges.stars,
       value: compact(stats.stars),
       icon: (
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
@@ -28,7 +28,7 @@ export async function RepoBadges() {
     })
     if (stats.latestVersion) {
       items.push({
-        label: "version",
+        label: labels.badges.version,
         value: stats.latestVersion,
         icon: (
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -38,7 +38,7 @@ export async function RepoBadges() {
       })
     }
     if (stats.openIssues > 0) items.push({
-      label: "open issues",
+      label: labels.badges.openIssues,
       value: compact(stats.openIssues),
       icon: (
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -50,7 +50,7 @@ export async function RepoBadges() {
   }
 
   items.push({
-    label: "license",
+    label: labels.badges.license,
     value: stats?.license ?? site.license,
     icon: (
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

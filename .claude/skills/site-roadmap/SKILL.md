@@ -11,7 +11,7 @@ description: 이 프로젝트 홈페이지의 로드맵 항목을 HTTP API 로 �
 ## 설정
 
 ```bash
-export SITE_URL="https://<이 프로젝트 도메인>"        # TODO(create-opensource)
+export SITE_URL="https://framenote.solhun.com"
 export SITE_ADMIN_KEY="<Vercel 의 ADMIN_API_KEY 값>"
 ```
 

@@ -12,16 +12,7 @@ import SponsorSection from "@/components/sponsor-section"
 import FAQSection from "@/components/faq-section"
 import CTASection from "@/components/cta-section"
 
-import {
-  faq,
-  features,
-  featuresIntro,
-  hero,
-  install,
-  repo,
-  repoUrl,
-  site,
-} from "@/site.config"
+import { faq, features, featuresIntro, hero, install, repo, repoUrl, site, labels } from "@/site.config"
 
 /**
  * 구조화 데이터.
@@ -95,7 +86,7 @@ export default function LandingPage() {
         </div>
 
         {/* ── 설치 한 줄 ─────────────────────────────────────── */}
-        <div className="w-full flex flex-col items-center gap-4 relative z-10 mt-8 sm:mt-10 lg:mt-12">
+        <div className="w-full px-4 flex flex-col items-center gap-4 relative z-10 mt-8 sm:mt-10 lg:mt-12">
           <InstallCommand />
           <div className="flex items-center gap-3">
             <Link
@@ -141,9 +132,9 @@ export default function LandingPage() {
         {/* ── 30초 예제 ──────────────────────────────────────── */}
         <div className="w-full border-b border-[rgba(55,50,47,0.12)] px-4 sm:px-6 md:px-12 py-12 sm:py-16 flex flex-col items-center gap-6">
           <div className="flex flex-col items-center gap-2 text-center">
-            <Badge text="Quick start" />
+            <Badge text={labels.home.quickStartBadge} />
             <h2 className="text-[#49423D] text-2xl sm:text-3xl md:text-4xl font-semibold font-sans tracking-tight">
-              Working code in 30 seconds
+              {labels.home.quickStartHeading}
             </h2>
           </div>
           <QuickStart />

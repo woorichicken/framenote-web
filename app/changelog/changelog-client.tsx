@@ -1,5 +1,6 @@
 "use client";
 
+import { labels } from "@/site.config"
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Play, Star } from "lucide-react";
@@ -48,7 +49,7 @@ function FeaturedChangelogCard({ changelog }: { changelog: Changelog }) {
           <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-                Featured Update
+                {labels.changelog.featured}
               </span>
               <span className="text-sm text-gray-500">{changelog.version}</span>
             </div>
@@ -185,12 +186,12 @@ function ChangelogRow({ entry }: { entry: Changelog }) {
         {/* Toggles */}
         <div className="bg-white rounded-xl border border-[rgba(55,50,47,0.08)] px-4 shadow-sm mt-2">
           <ChangelogSection
-            title="Improvements"
+            title={labels.changelog.improvements}
             items={improvements}
             defaultOpen={improvements.length > 0}
           />
-          <ChangelogSection title="Fixes" items={fixes} />
-          <ChangelogSection title="Patches" items={patches} />
+          <ChangelogSection title={labels.changelog.fixes} items={fixes} />
+          <ChangelogSection title={labels.changelog.patches} items={patches} />
         </div>
       </div>
     </div>

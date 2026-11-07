@@ -4,6 +4,11 @@
 | --- | --- |
 | [demo-scenario.mjs](demo-scenario.mjs) | **무엇을 찍나** — 이 파일만 고친다 (`pnpm demo:record`) |
 | [record-demo.mjs](record-demo.mjs) | **어떻게 찍나** — 리코더. 보통 안 건드린다 |
+| [demo/record-all.sh](demo/record-all.sh) | 샘플 렌더 → framenote 서버 → 녹화 → 닫기까지 한 번에. 인자는 빈 출력 폴더 |
+| [demo/render-sample.py](demo/render-sample.py) | 데모용 샘플 영상을 실제로 렌더한다 |
+| [demo/demo-agent.mjs](demo/demo-agent.mjs) | 에이전트 자리에 앉는 고정 스크립트 (LLM 아님, 접점은 진짜) |
+| [make-brand-assets.py](make-brand-assets.py) | `brand/mark.png` → 파비콘·머리 로고·공유 카드 |
+| [qa-shots.mjs](qa-shots.mjs) | 전 라우트 1440·390 캡처 + 넘침·잔재 검사 |
 
 ## 데모 영상 — 사람이 안 찍는다
 

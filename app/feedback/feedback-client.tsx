@@ -1,5 +1,6 @@
 "use client";
 
+import { labels } from "@/site.config"
 import { useState } from "react";
 import { MessageSquare, Heart, Send, User, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -74,7 +75,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
             onClick={() => setFilter("IDEA")}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${filter === "IDEA" ? "text-[#37322F]" : "text-gray-400 hover:text-gray-600"}`}
         >
-            Feature Request
+            {labels.feedback.idea}
             {filter === "IDEA" && (
                 <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#37322F]" />
             )}
@@ -83,7 +84,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
             onClick={() => setFilter("ISSUE")}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${filter === "ISSUE" ? "text-[#37322F]" : "text-gray-400 hover:text-gray-600"}`}
         >
-            Bug Report
+            {labels.feedback.issue}
             {filter === "ISSUE" && (
                 <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#37322F]" />
             )}
@@ -92,7 +93,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
             onClick={() => setFilter("OTHER")}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${filter === "OTHER" ? "text-[#37322F]" : "text-gray-400 hover:text-gray-600"}`}
         >
-            Other
+            {labels.feedback.other}
             {filter === "OTHER" && (
                 <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#37322F]" />
             )}
@@ -107,28 +108,28 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
                 onClick={() => setCategory("IDEA")}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold border transition-colors ${category === "IDEA" ? "bg-[#37322F] text-white border-[#37322F]" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"}`}
              >
-                Feature Request
+                {labels.feedback.idea}
              </button>
              <button
                 type="button"
                 onClick={() => setCategory("ISSUE")}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold border transition-colors ${category === "ISSUE" ? "bg-[#37322F] text-white border-[#37322F]" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"}`}
              >
-                Bug Report
+                {labels.feedback.issue}
              </button>
              <button
                 type="button"
                 onClick={() => setCategory("OTHER")}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold border transition-colors ${category === "OTHER" ? "bg-[#37322F] text-white border-[#37322F]" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"}`}
              >
-                Other
+                {labels.feedback.other}
              </button>
           </div>
 
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder={labels.feedback.placeholder}
             className="w-full min-h-[100px] bg-transparent border-0 resize-none focus:ring-0 text-[#37322F] placeholder:text-gray-400 text-lg mb-4 font-sans"
             required
           />
@@ -146,7 +147,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
                   className="hidden"
                 />
                 <span className="text-sm text-[#605A57] font-medium group-hover:text-[#37322F] transition-colors">
-                  Anonymous
+                  {labels.feedback.anonymous}
                 </span>
               </label>
 
@@ -160,7 +161,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Your Name"
+                    placeholder={labels.feedback.namePlaceholder}
                     className="px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 text-sm focus:outline-none focus:border-[#37322F] w-40"
                     required={!isAnonymous}
                   />
@@ -173,7 +174,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
               disabled={isSubmitting || !content.trim()}
               className="px-6 py-2 bg-[#37322F] text-white rounded-full text-sm font-medium hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {isSubmitting ? "Posting..." : "Post Feedback"}
+              {isSubmitting ? labels.feedback.posting : labels.feedback.post}
               <Send size={14} />
             </button>
           </div>
@@ -187,7 +188,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
         ))}
         {filteredFeedbacks.length === 0 && (
             <div className="text-center text-gray-400 py-10">
-                No feedback found for this category.
+                {labels.feedback.empty}
             </div>
         )}
       </div>
@@ -198,11 +199,11 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
 function CategoryBadge({ category }: { category: string }) {
     switch (category) {
         case "ISSUE":
-            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">Bug Report</span>;
+            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">{labels.feedback.issue}</span>;
         case "IDEA":
-            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">Feature Request</span>;
+            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">{labels.feedback.idea}</span>;
         default:
-            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">Other</span>;
+            return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-transparent text-gray-500 border border-gray-200 uppercase tracking-wider">{labels.feedback.other}</span>;
     }
 }
 
@@ -270,12 +271,12 @@ function FeedbackItem({ item }: { item: Feedback }) {
           <div>
             <div className="flex items-center gap-2">
                 <div className="text-sm font-semibold text-[#37322F] font-sans">
-                  {item.isAnonymous ? "Anonymous User" : item.name}
+                  {item.isAnonymous ? labels.feedback.anonymousUser : item.name}
                 </div>
                 <CategoryBadge category={item.category} />
             </div>
             <div className="text-xs text-gray-400">
-              {new Date(item.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+              {new Date(item.createdAt).toLocaleDateString(labels.dateLocale, { year: "numeric", month: "short", day: "numeric" })}
             </div>
           </div>
         </div>
@@ -328,10 +329,10 @@ function FeedbackItem({ item }: { item: Feedback }) {
                     <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-gray-100 text-sm shadow-sm">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-semibold text-[#37322F] text-xs">
-                           {comment.isAnonymous ? "Anonymous" : comment.name}
+                           {comment.isAnonymous ? labels.feedback.anonymous : comment.name}
                         </span>
                         <span className="text-[10px] text-gray-400">
-                          {new Date(comment.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                          {new Date(comment.createdAt).toLocaleDateString(labels.dateLocale, { year: "numeric", month: "short", day: "numeric" })}
                         </span>
                       </div>
                       <p className="text-[#605A57]">{comment.content}</p>
@@ -345,7 +346,7 @@ function FeedbackItem({ item }: { item: Feedback }) {
                  <textarea
                     value={commentContent}
                     onChange={(e) => setCommentContent(e.target.value)}
-                    placeholder="Write a comment..."
+                    placeholder={labels.feedback.commentPlaceholder}
                     className="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:border-[#37322F] resize-none"
                     rows={2}
                     required
@@ -359,14 +360,14 @@ function FeedbackItem({ item }: { item: Feedback }) {
                               onChange={(e) => setCmtAnonymous(e.target.checked)}
                               className="w-3 h-3 accent-[#37322F]"
                             />
-                            <span className="text-xs text-gray-500 font-medium">Anonymous</span>
+                            <span className="text-xs text-gray-500 font-medium">{labels.feedback.anonymous}</span>
                          </label>
                          {!cmtAnonymous && (
                              <input 
                                 type="text" 
                                 value={cmtName}
                                 onChange={(e) => setCmtName(e.target.value)}
-                                placeholder="Name"
+                                placeholder={labels.feedback.namePlaceholder}
                                 className="bg-white border border-gray-200 rounded-md px-2 py-1 text-xs w-24"
                                 required
                              />
@@ -377,7 +378,7 @@ function FeedbackItem({ item }: { item: Feedback }) {
                         disabled={isSubmittingCmt || !commentContent.trim()}
                         className="text-xs font-semibold text-[#37322F] hover:underline disabled:opacity-50 disabled:no-underline"
                      >
-                        Post
+                        {labels.feedback.commentPost}
                      </button>
                   </div>
               </form>

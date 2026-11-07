@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { nav, repoUrl, site } from "@/site.config"
+import { nav, repoUrl, site, labels } from "@/site.config"
 
 /**
  * 헤더 메뉴는 site.config 의 `nav` 가 정본이다.
@@ -23,7 +23,7 @@ export function SiteHeader() {
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="sm:hidden flex flex-col justify-center items-center w-8 h-8 rounded-full hover:bg-[rgba(55,50,47,0.05)] transition-all duration-200"
-            aria-label="Open menu"
+            aria-label={labels.common.openMenu}
           >
             <span className="block w-4 h-0.5 bg-[#2F3037]" />
             <span className="block w-4 h-0.5 bg-[#2F3037] my-1" />
@@ -34,7 +34,7 @@ export function SiteHeader() {
             <Link href="/" className="flex justify-start items-center gap-2 cursor-pointer">
               <img
                 src={site.logo}
-                alt={`${site.name} logo`}
+                alt={labels.common.logoAlt}
                 className="w-6 h-6 sm:w-7 sm:h-7 rounded-md object-cover border border-[rgba(55,50,47,0.08)]"
               />
               <span className="text-[#2F3037] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-5 font-sans">
@@ -113,7 +113,7 @@ export function SiteHeader() {
                 <img src={site.logo} alt="" className="w-7 h-7 rounded-md" />
                 <span className="text-[#2F3037] text-lg font-medium font-sans">{site.name}</span>
               </Link>
-              <button onClick={() => setIsSidebarOpen(false)} aria-label="Close menu" className="w-8 h-8 flex items-center justify-center">
+              <button onClick={() => setIsSidebarOpen(false)} aria-label={labels.common.closeMenu} className="w-8 h-8 flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F3037" strokeWidth="2" strokeLinecap="round">
                   <path d="M18 6 6 18M6 6l12 12" />
                 </svg>

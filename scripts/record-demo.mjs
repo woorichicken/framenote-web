@@ -7,7 +7,29 @@ import { chromium } from "playwright";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-export async function record({ url, outDir, width = 1280, height = 800, scenario }) {
+/**
+ * 화면에 있는 조작 가능한 이름을 뽑는다. 시나리오를 쓰기 전에 이걸 먼저 본다 —
+ * **추측하면 그 단계를 조용히 건너뛴다.**
+ */
+export async function listTargets(page, limit = 40) {
+  return page.evaluate((n) => {
+    const out = [];
+    const sel = 'button, a[href], input, textarea, select, [role="button"], [role="link"], [role="textbox"], [aria-label]';
+    for (const el of document.querySelectorAll(sel)) {
+      const r = el.getBoundingClientRect();
+      if (r.width < 4 || r.height < 4) continue;
+      const name = el.getAttribute("aria-label")
+        || el.getAttribute("placeholder")
+        || (el.innerText ?? "").trim().split("\n")[0]
+        || el.getAttribute("title") || "";
+      if (name) out.push(name.slice(0, 60));
+      if (out.length >= n) break;
+    }
+    return [...new Set(out)];
+  }, limit);
+}
+
+export async function record({ url, outDir, width = 1280, height = 800, scenario, storageState }) {
   mkdirSync(outDir, { recursive: true });
 
   const events = [];
@@ -21,6 +43,16 @@ export async function record({ url, outDir, width = 1280, height = 800, scenario
     // 영상 크기 = 뷰포트. 어긋나면 polish.py 의 좌표 스케일이 1이 아니게 되고
     // 확대가 클릭 지점에서 빗나간다.
     recordVideo: { dir: outDir, size: { width, height } },
+    // 복사 버튼을 데모로 찍으려면 클립보드가 돼야 한다. 안 주면 writeText 가 던지고
+    // 버튼이 아무 반응을 안 해서 **아무 일도 안 일어난 영상**이 나온다(실측).
+    permissions: ["clipboard-read", "clipboard-write"],
+    // 로그인 뒤 화면을 찍을 때 쓴다. Playwright 로 한 번 로그인해 storageState 를 저장해
+    // 두고 그 파일 경로를 넘긴다 — 시나리오에 아이디·비밀번호를 적지 않기 위해서다
+    // (영상에 입력 과정이 찍히고, 시나리오 파일에 자격증명이 남는다).
+    //
+    // 내 개인 세션·쿠키를 쓰는 것은 이 스킬이 아니라 `aside-browser` 다. 여기서 쓰는 건
+    // **테스트 계정으로 방금 만든 상태**여야 한다.
+    ...(storageState ? { storageState } : {}),
   });
   const page = await context.newPage();
 
@@ -57,6 +89,57 @@ export async function record({ url, outDir, width = 1280, height = 800, scenario
     cur = to;
   }
 
+  /**
+   * 이름으로 요소를 찾는다 — macOS 의 접근성, 안드로이드의 content-desc 와 같은 자리다.
+   *
+   * 순서: 접근가능 이름(role) → 보이는 글자 → placeholder/label → CSS 셀렉터.
+   * CSS 를 마지막에 두는 이유는 `button.foo` 같은 게 이름으로 안 읽히기 때문이다 —
+   * 쓸 수는 있게 두되 권하지는 않는다.
+   */
+  async function resolve(name) {
+    if (!name) return null;
+    // **정확 일치를 먼저 본다.** exact:false 로만 찾으면 그 글자를 품은 *조상*이나
+    // 설명 문단이 먼저 잡힌다 — 그러면 클릭이 엉뚱한 데로 가고, 영상은 멀쩡히 나오는데
+    // 아무 일도 안 일어난다(실측 2026-08-26: "급여 계산" 이 탭이 아니라 그 글자가 든
+    // 설명 문단에 매칭돼 두 클릭이 전부 헛것이 됐다. verify 의 "클릭이 먹었나" 가 잡았다).
+    //
+    // tab 도 후보에 넣는다. 탭 UI 는 `role="tab"` 이라 button 으로는 안 잡히는 구현이 흔하다.
+    const roles = ["tab", "button", "link", "menuitem", "textbox"];
+    const tries = [
+      ...roles.map((r) => () => page.getByRole(r, { name, exact: true })),
+      () => page.getByLabel(name, { exact: true }),
+      () => page.getByPlaceholder(name, { exact: true }),
+      // 정확 일치가 없을 때만 느슨하게 — 순서가 중요하다
+      ...roles.map((r) => () => page.getByRole(r, { name, exact: false })),
+      () => page.getByLabel(name, { exact: false }),
+      () => page.getByPlaceholder(name, { exact: false }),
+      () => page.getByText(name, { exact: true }),
+      () => page.getByText(name, { exact: false }),
+      () => page.locator(name),          // CSS 셀렉터 폴백
+    ];
+    for (const make of tries) {
+      try {
+        const loc = make().first();
+        if (await loc.count() > 0 && await loc.isVisible()) return loc;
+      } catch {
+        // 셀렉터로 해석이 안 되는 문자열이면 다음 방법으로
+      }
+    }
+    // 못 찾으면 화면에 뭐가 있는지 알려준다 — 번역·오타를 그 자리에서 잡으라고.
+    const names = await listTargets(page, 8);
+    console.error(`요소를 못 찾았다: '${name}' · 화면에 있는 이름: ${names.join(", ")}`);
+    return null;
+  }
+
+  async function boxOf(loc) {
+    const b = await loc.boundingBox();
+    if (!b) return null;
+    return {
+      point: { x: Math.round(b.x + b.width / 2), y: Math.round(b.y + b.height / 2) },
+      bbox: [b.x, b.y, b.width, b.height].map(Math.round),
+    };
+  }
+
   async function box(selector) {
     const b = await page.locator(selector).first().boundingBox();
     if (!b) throw new Error(`요소를 못 찾았다: ${selector}`);
@@ -69,29 +152,16 @@ export async function record({ url, outDir, width = 1280, height = 800, scenario
   /** 시나리오가 쓰는 도구들. 여기 없는 건 `page` 로 직접 한다. */
   const api = {
     page,
-    /** 요소로 이동해서 클릭. bbox 를 같이 남겨 polish.py 가 점이 아니라 요소를 잡게 한다. */
+    /**
+     * CSS 셀렉터로 클릭. 이름으로 안 잡히는 것(캔버스 툴바 등)에만 쓴다.
+     * 보통은 `press(이름)` 를 쓴다 — 그래야 UI 가 움직여도 안 깨진다.
+     */
     async click(selector, { pause = 900 } = {}) {
       const t = await box(selector);
       await moveTo(t.point);
       await page.mouse.down();
       ev({ type: "down", t: now(), x: t.point.x, y: t.point.y, bbox: t.bbox });
       await page.mouse.up();
-      await page.waitForTimeout(pause);
-    },
-    /** 한 글자씩 친다. 각 글자를 key 이벤트로 남겨야 키스트로크 칩이 뜬다. */
-    async type(selector, text, { cps = 14, pause = 600 } = {}) {
-      const t = await box(selector);
-      await moveTo(t.point);
-      await page.mouse.down();
-      ev({ type: "down", t: now(), x: t.point.x, y: t.point.y, bbox: t.bbox });
-      await page.mouse.up();
-      await page.waitForTimeout(300);
-      for (const ch of text) {
-        await page.keyboard.type(ch);
-        ev({ type: "key", t: now(), key: ch, bbox: t.bbox });
-        // 사람 타이핑은 등간격이 아니다. ±40% 흔든다.
-        await page.waitForTimeout((1000 / cps) * (0.6 + Math.random() * 0.8));
-      }
       await page.waitForTimeout(pause);
     },
     /**
@@ -125,12 +195,66 @@ export async function record({ url, outDir, width = 1280, height = 800, scenario
       ev({ type: "key", t: now(), key: k });
       await page.waitForTimeout(pause);
     },
-    async scroll(dy, { pause = 1400 } = {}) {
-      await page.evaluate((d) => window.scrollBy({ top: d, behavior: "smooth" }), dy);
-      await page.waitForTimeout(pause);
-    },
     async wait(ms) {
       await page.waitForTimeout(ms);
+    },
+
+    // ── 이름 기반 (SCENARIO.md 규격) ────────────────────────────────
+    // 못 찾으면 false 를 돌려준다. 던지지 않는 이유는 한 단계가 안 맞았다고
+    // 나머지 데모를 통째로 버릴 이유가 없어서다 — 대신 끝에 건수를 센다.
+    async press(name, { pause = 900 } = {}) {
+      const loc = await resolve(name);
+      if (!loc) return false;
+      const t = await boxOf(loc);
+      if (!t) return false;
+      await moveTo(t.point);
+      await page.mouse.down();
+      ev({ type: "down", t: now(), x: t.point.x, y: t.point.y, bbox: t.bbox });
+      await page.mouse.up();
+      await page.waitForTimeout(pause);
+      return true;
+    },
+
+    async type(name, text, { cps = 14, pause = 700 } = {}) {
+      const loc = await resolve(name);
+      if (!loc) return false;
+      const t = await boxOf(loc);
+      if (!t) return false;
+      await moveTo(t.point);
+      await page.mouse.down();
+      ev({ type: "down", t: now(), x: t.point.x, y: t.point.y, bbox: t.bbox });
+      await page.mouse.up();
+      await page.waitForTimeout(250);
+      for (const ch of text) {
+        await page.keyboard.type(ch);
+        ev({ type: "key", t: now(), key: ch === " " ? "␣" : ch, bbox: t.bbox });
+        await page.waitForTimeout((1000 / cps) * (0.6 + Math.random() * 0.8));
+      }
+      await page.waitForTimeout(pause);
+      return true;
+    },
+
+    /**
+     * 이름을 주면 그게 보이게, 숫자를 주면 그만큼.
+     * `scroll(900)` 과 `scroll({ to: "FAQ" })` 를 둘 다 받는다 —
+     * 캔버스 시나리오는 아직 숫자를 쓴다.
+     */
+    async scroll(arg = {}, opts = {}) {
+      const { to, dy, pause = 1200 } =
+        typeof arg === "number" ? { dy: arg, ...opts } : { ...arg, ...opts };
+      if (typeof dy === "number") {
+        await page.evaluate((d) => window.scrollBy({ top: d, behavior: "smooth" }), dy);
+        await page.waitForTimeout(pause);
+        return true;
+      }
+      const loc = await resolve(to);
+      if (!loc) return false;
+      await loc.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(400);
+      const t = await boxOf(loc);
+      if (t) await moveTo(t.point);
+      await page.waitForTimeout(pause);
+      return true;
     },
   };
 

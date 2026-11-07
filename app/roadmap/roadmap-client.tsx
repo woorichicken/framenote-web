@@ -1,5 +1,6 @@
 "use client";
 
+import { labels } from "@/site.config"
 import { motion } from "framer-motion";
 import type { Roadmap } from "@/lib/db";
 
@@ -16,17 +17,17 @@ function StatusBadge({ status }: { status: Status }) {
     completed: "bg-green-100 text-green-700 border-green-200",
   };
 
-  const labels = {
-    "in-progress": "In Progress",
-    planned: "Planned",
-    completed: "Completed",
+  const statusLabels = {
+    "in-progress": labels.roadmap.inProgress,
+    planned: labels.roadmap.planned,
+    completed: labels.roadmap.completed,
   };
 
   return (
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${styles[status]}`}
     >
-      {labels[status]}
+      {statusLabels[status]}
     </span>
   );
 }
@@ -43,7 +44,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
         <div className="flex items-center gap-2 mb-6">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
           <h2 className="text-xl font-semibold text-[#37322F] font-serif">
-            In Progress
+            {labels.roadmap.inProgress}
           </h2>
         </div>
         <div className="space-y-4">
@@ -81,7 +82,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
           <div className="flex items-center gap-2 mb-6">
             <div className="w-2 h-2 rounded-full bg-gray-300" />
             <h2 className="text-xl font-semibold text-[#37322F] font-serif">
-              Planned
+              {labels.roadmap.planned}
             </h2>
           </div>
           <div className="space-y-4">
@@ -120,7 +121,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
           <div className="flex items-center gap-2 mb-6">
             <div className="w-2 h-2 rounded-full bg-green-500" />
             <h2 className="text-xl font-semibold text-[#37322F] font-serif">
-              Completed
+              {labels.roadmap.completed}
             </h2>
           </div>
           <div className="space-y-4">
@@ -156,7 +157,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
       {/* Empty State */}
       {roadmaps.length === 0 && (
         <div className="py-12 text-center text-gray-500">
-          No roadmap items available yet.
+          {labels.roadmap.empty}
         </div>
       )}
     </div>

@@ -1,8 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Instrument_Serif } from "next/font/google"
+import { Inter, Instrument_Serif, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from "@/components/google-analytics"
+import FeedbackWidget from "@/components/feedback/FeedbackWidget"
 import { repo, repoUrl, site, verification } from "@/site.config"
 import "./globals.css"
 
@@ -21,13 +22,28 @@ const instrumentSerif = Instrument_Serif({
   preload: true,
 })
 
+// Inter·Instrument Serif 에는 한글이 없다. 그대로 두면 제목이 OS 기본 명조로 떨어져 기기마다 달라진다.
+// 한글 글꼴은 조각이 많아 미리 받지 않는다(preload: false) — 첫 화면 무게를 늘리지 않기 위해서다.
+const notoSansKr = Noto_Sans_KR({
+  variable: "--font-noto-sans-kr",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
+})
+
+const notoSerifKr = Noto_Serif_KR({
+  variable: "--font-noto-serif-kr",
+  weight: ["500", "700"],
+  display: "swap",
+  preload: false,
+})
+
 /**
  * 메타데이터는 전부 site.config 에서 온다.
  * 여기에 문자열을 직접 쓰면 다음 프로젝트가 이 파일도 고쳐야 한다.
  */
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  icons: { icon: site.logo, apple: site.logo },
   title: {
     default: `${site.name} — ${site.tagline}`,
     template: `%s | ${site.name}`,
@@ -74,12 +90,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang={site.lang}
-      className={`${inter.variable} ${instrumentSerif.variable} antialiased`}
+      className={`${inter.variable} ${instrumentSerif.variable} ${notoSansKr.variable} ${notoSerifKr.variable} antialiased`}
     >
       <body className="font-sans antialiased">
         {children}
         <Analytics />
         <GoogleAnalytics />
+        <FeedbackWidget />
       </body>
     </html>
   )

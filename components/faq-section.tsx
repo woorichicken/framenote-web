@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { faq } from "@/site.config"
+import { faq, labels } from "@/site.config"
 
 /**
  * FAQ. 항목은 site.config 의 `faq` 가 정본이고, 같은 배열이 JSON-LD(FAQPage)로도
@@ -43,7 +43,7 @@ export default function FAQSection() {
     <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center">
       <div className="self-stretch px-4 sm:px-6 md:px-24 py-12 sm:py-16 flex flex-col justify-center items-center gap-8">
         <h2 className="text-center text-[#49423D] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight font-sans tracking-tight">
-          Frequently asked questions
+          {labels.home.faqHeading}
         </h2>
 
         <div className="w-full max-w-[720px] flex flex-col">

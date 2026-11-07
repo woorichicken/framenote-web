@@ -1,5 +1,6 @@
 "use client"
 
+import { labels } from "@/site.config"
 import { useRef } from "react"
 
 /**
@@ -17,7 +18,7 @@ export function ZoomableImage({ src, alt, className = "" }: { src: string; alt: 
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        aria-label={`Enlarge image: ${alt}`}
+        aria-label={`${labels.common.enlargeImage}: ${alt}`}
         className="block w-full cursor-zoom-in rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#37322F]"
       >
         <img src={src} alt={alt} className={className} loading="lazy" />
@@ -33,7 +34,7 @@ export function ZoomableImage({ src, alt, className = "" }: { src: string; alt: 
         <img src={src} alt={alt} className="block h-auto max-h-[90vh] w-auto max-w-[95vw] rounded-lg" />
         <button
           type="button"
-          aria-label="Close"
+          aria-label={labels.common.close}
           className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-xl leading-none text-white hover:bg-black/80"
         >
           ×

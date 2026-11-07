@@ -1,4 +1,4 @@
-import { docs, install } from "@/site.config"
+import { docs, labels } from "@/site.config"
 import { InstallCommand } from "./install-command"
 import { QuickStart } from "./quick-start"
 
@@ -25,7 +25,7 @@ export default function DocumentationSection() {
               rel="noopener noreferrer"
               className="h-10 px-6 flex items-center rounded-full bg-[#37322F] text-white text-sm font-medium font-sans hover:bg-[#2A2520] transition-colors"
             >
-              Full documentation →
+              {labels.docs.fullDocs}
             </a>
           )}
         </div>
@@ -34,18 +34,18 @@ export default function DocumentationSection() {
       {/* 1. 설치 */}
       <div className="self-stretch px-6 md:px-24 py-12 border-b border-[rgba(55,50,47,0.12)] flex flex-col items-center gap-5">
         <h2 className="text-[#37322F] text-xl md:text-2xl font-semibold font-sans">
-          1. Install
+          {labels.docs.step1}
         </h2>
         <InstallCommand id="docs-install" />
         <p className="text-[rgba(55,50,47,0.55)] text-xs font-sans">
-          Requires {install.options[0]?.label ?? "a package manager"}.
+          {labels.docs.requires}
         </p>
       </div>
 
       {/* 2. 첫 예제 */}
       <div className="self-stretch px-6 md:px-24 py-12 border-b border-[rgba(55,50,47,0.12)] flex flex-col items-center gap-5">
         <h2 className="text-[#37322F] text-xl md:text-2xl font-semibold font-sans">
-          2. Run your first call
+          {labels.docs.step2}
         </h2>
         <QuickStart />
       </div>
@@ -53,7 +53,7 @@ export default function DocumentationSection() {
       {/* 3. 더 읽기 */}
       <div className="self-stretch px-6 md:px-24 py-12 border-b border-[rgba(55,50,47,0.12)] flex flex-col items-center gap-6">
         <h2 className="text-[#37322F] text-xl md:text-2xl font-semibold font-sans">
-          3. Go deeper
+          {labels.docs.step3}
         </h2>
         <div className="w-full max-w-[720px] grid grid-cols-1 sm:grid-cols-2 gap-3">
           {docs.guides.map((g) => (

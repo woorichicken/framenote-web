@@ -1,5 +1,5 @@
 import { getContributors } from "@/lib/github"
-import { repoUrl } from "@/site.config"
+import { repoUrl, labels } from "@/site.config"
 
 /**
  * 기여자 아바타 그리드.
@@ -18,10 +18,10 @@ export async function Contributors() {
     <div className="w-full border-b border-[rgba(55,50,47,0.12)] px-4 sm:px-6 md:px-12 py-12 sm:py-16 flex flex-col items-center gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
         <h2 className="text-[#49423D] text-2xl sm:text-3xl md:text-4xl font-semibold font-sans tracking-tight">
-          Built by {people.length}+ contributors
+          {labels.contributors.heading(people.length)}
         </h2>
         <p className="text-[#605A57] text-sm sm:text-base font-sans">
-          Every avatar below has merged code into this project.
+          {labels.contributors.body}
         </p>
       </div>
 
@@ -32,7 +32,7 @@ export async function Contributors() {
             href={p.htmlUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title={`${p.login} · ${p.contributions} commits`}
+            title={`${p.login} · ${labels.contributors.commits(p.contributions)}`}
             className="block w-11 h-11 rounded-full overflow-hidden border border-[rgba(55,50,47,0.12)] hover:scale-110 transition-transform duration-200"
           >
             {/* next/image 를 쓰지 않는다 — 아바타 24개를 전부 최적화 요청으로 돌리면
@@ -55,7 +55,7 @@ export async function Contributors() {
         rel="noopener noreferrer"
         className="text-[#37322F] hover:text-[#605A57] transition-colors text-sm font-medium font-sans underline"
       >
-        See all contributors →
+        {labels.contributors.seeAll}
       </a>
     </div>
   )

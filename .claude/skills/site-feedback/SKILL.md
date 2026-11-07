@@ -16,7 +16,7 @@ description: 이 프로젝트 홈페이지에 들어온 사용자 피드백을 �
 ## 설정
 
 ```bash
-export SITE_URL="https://<이 프로젝트 도메인>"        # TODO(create-opensource)
+export SITE_URL="https://framenote.solhun.com"
 export SITE_ADMIN_KEY="<Vercel 의 ADMIN_API_KEY 값>"   # 삭제할 때만 필요
 ```
 
