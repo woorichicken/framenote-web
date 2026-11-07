@@ -1,0 +1,36 @@
+# CLI Manager (Solhun)
+
+> Manage Claude Code, Codex CLI, and Gemini CLI from a single macOS desktop dashboard.
+
+A desktop application for macOS that centralizes management of multiple CLI agents. Switch between Claude Code, Codex CLI, and Gemini CLI, organize projects in one workspace, rename agents to define their roles, and instantly switch between VS Code, Cursor, and other editors. All data is processed locally with Apple notarization for security.
+
+## Core Features
+
+- [Agent Management](https://solhun.com): Manage Claude Code, Codex CLI, and Gemini CLI in a unified dashboard
+- [Project Organization](https://solhun.com): Organize all projects in one centralized workspace
+- [Agent Customization](https://solhun.com): Rename CLI agents to define their specific roles and purposes
+- [Editor Switching](https://solhun.com): Switch instantly between VS Code, Cursor, and other code editors
+
+## Documentation
+
+- [Getting Started](https://solhun.com/docs): Installation guide and initial setup instructions
+- [Pricing](https://solhun.com/pricing): Free core features with optional premium capabilities
+
+## Resources
+
+- [Gallery](https://solhun.com/gallery): Screenshots and visual demonstrations of the application
+- [Changelog](https://solhun.com/changelog): Version history and feature updates
+- [FAQ](https://solhun.com/#faq): Frequently asked questions about CLI agent management
+
+## Technical Details
+
+- Platform: macOS Desktop Application
+- Supported CLI Tools: Claude Code, Gemini CLI, Codex CLI, and custom CLI tools
+- Data Privacy: All data processed locally, no external data transmission
+- Security: Apple notarized application
+- Price: Free core features
+
+## Optional
+
+- Windows Support: Coming soon
+- Linux Support: Not yet on roadmap
