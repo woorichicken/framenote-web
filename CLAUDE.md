@@ -12,6 +12,8 @@
   에이전트 자리는 LLM 이 아니라 고정 스크립트이므로 사이트 문구에 그 사실을 유지한다.
 - 로고 다시 뽑기: `python3 scripts/make-brand-assets.py` (원본 `brand/`, 생성 기록 `brand/source/*.json`).
 - 제보 버튼: `components/feedback/FeedbackWidget.tsx`(부착 타입 global), env `NEXT_PUBLIC_DP_FEEDBACK_URL`·`NEXT_PUBLIC_DP_FEEDBACK_KEY`.
+- 화면 점검: `node scripts/qa-shots.mjs <주소> <폴더>`(전 라우트 1440·390 캡처 + 넘침·잔재 검사).
+- 운영 점검: `node scripts/ops-check.mjs <주소> <코멘트>`(영상 재생 + 실제 제보 1건 — 보낸 뒤 `dp list-annotations` 로 도착을 보고 근거를 적어 닫는다).
 
 ## 깨지 말아야 할 것
 
