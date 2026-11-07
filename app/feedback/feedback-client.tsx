@@ -66,7 +66,7 @@ export function FeedbackClient({ initialFeedbacks }: { initialFeedbacks: Feedbac
             onClick={() => setFilter("ALL")}
             className={`pb-3 px-1 text-sm font-medium transition-colors relative ${filter === "ALL" ? "text-[#37322F]" : "text-gray-400 hover:text-gray-600"}`}
         >
-            All
+            {labels.feedback.all}
             {filter === "ALL" && (
                 <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#37322F]" />
             )}

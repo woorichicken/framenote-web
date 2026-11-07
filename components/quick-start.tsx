@@ -43,7 +43,7 @@ export function QuickStart() {
         </button>
       </div>
       <pre className="px-5 py-4 overflow-x-auto">
-        <code className="text-[#E8E4E0] font-mono text-[13px] leading-6 whitespace-pre">
+        <code className="text-[#E8E4E0] font-mono text-[13px] leading-6 whitespace-pre-wrap sm:whitespace-pre">
           {quickStart.code}
         </code>
       </pre>

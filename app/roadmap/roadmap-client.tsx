@@ -40,6 +40,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
   return (
     <div className="space-y-12">
       {/* In Progress Section */}
+      {inProgress.length > 0 && (
       <section>
         <div className="flex items-center gap-2 mb-6">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
@@ -75,6 +76,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
             ))}
         </div>
       </section>
+      )}
 
       {/* Planned Section */}
       {planned.length > 0 && (

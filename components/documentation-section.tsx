@@ -37,9 +37,6 @@ export default function DocumentationSection() {
           {labels.docs.step1}
         </h2>
         <InstallCommand id="docs-install" />
-        <p className="text-[rgba(55,50,47,0.55)] text-xs font-sans">
-          {labels.docs.requires}
-        </p>
       </div>
 
       {/* 2. 첫 예제 */}

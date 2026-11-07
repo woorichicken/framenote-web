@@ -9,7 +9,7 @@ import { join } from "node:path";
 const [base, outDir] = process.argv.slice(2);
 const ROUTES = [["home", "/"], ["docs", "/docs"], ["changelog", "/changelog"], ["roadmap", "/roadmap"], ["feedback", "/feedback"]];
 const WIDTHS = [[1440, 900], [390, 844]];
-const LEFTOVER = /CLI Manager|solhun\.com\/pricing|agent-swap|YourProject|your-package|TODO|Lorem|Get started|Quick start/;
+const LEFTOVER = /CLI Manager|solhun\.com\/pricing|agent-swap|YourProject|your-package|TODO|Lorem|Get started|Quick start|\bAll\b|Post Feedback|In Progress|Planned/;
 
 mkdirSync(outDir, { recursive: true });
 const browser = await chromium.launch();

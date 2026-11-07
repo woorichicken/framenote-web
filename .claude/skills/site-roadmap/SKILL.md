@@ -56,7 +56,7 @@ for r in json.load(sys.stdin): print(r['id'], r['status'], '|', r['title'])
 "
 
 # 2) 상태만 변경
-curl -s -X PATCH "$SITE_URL/api/roadmaps/<id>" \
+curl -s -X PUT "$SITE_URL/api/roadmaps/<id>" \
   -H "Authorization: Bearer $SITE_ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{"status": "completed"}'

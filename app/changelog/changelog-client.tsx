@@ -190,8 +190,8 @@ function ChangelogRow({ entry }: { entry: Changelog }) {
             items={improvements}
             defaultOpen={improvements.length > 0}
           />
-          <ChangelogSection title={labels.changelog.fixes} items={fixes} />
-          <ChangelogSection title={labels.changelog.patches} items={patches} />
+          {fixes.length > 0 && <ChangelogSection title={labels.changelog.fixes} items={fixes} />}
+          {patches.length > 0 && <ChangelogSection title={labels.changelog.patches} items={patches} />}
         </div>
       </div>
     </div>

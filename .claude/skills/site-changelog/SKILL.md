@@ -62,7 +62,7 @@ curl -s -X POST "$SITE_URL/api/changelogs" \
 ## 수정 / 삭제
 
 ```bash
-curl -s -X PATCH "$SITE_URL/api/changelogs/<id>" \
+curl -s -X PUT "$SITE_URL/api/changelogs/<id>" \
   -H "Authorization: Bearer $SITE_ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{"title": "고친 제목"}'

@@ -254,7 +254,7 @@ export const labels = {
   footer: { licensed: `${site.license} 라이선스로 공개합니다.` },
   badges: { stars: "별", version: "버전", openIssues: "열린 이슈", license: "라이선스" },
   contributors: { heading: (count: number) => `기여자 ${count}명 이상`, body: "아래 모두 이 프로젝트에 코드를 머지했습니다.", commits: (n: number) => `커밋 ${n}개`, seeAll: "기여자 전체 보기 →" },
-  docs: { fullDocs: "전체 문서 →", step1: "1. 실행", step2: "2. 에이전트 붙이기", step3: "3. 더 읽기", requires: "Node 22 이상과 ffmpeg·ffprobe 가 필요합니다." },
+  docs: { fullDocs: "전체 문서 →", step1: "1. 실행", step2: "2. 에이전트 붙이기", step3: "3. 더 읽기" },
   changelog: {
     title: "변경 기록",
     metaDescription: `${site.name} 의 모든 릴리스 — 새 기능, 수정, 호환이 깨지는 변경.`,
