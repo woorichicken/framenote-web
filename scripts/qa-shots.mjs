@@ -1,5 +1,6 @@
 /**
  * 전 라우트를 1440·390 폭으로 열어 전체 캡처를 남기고 가로 넘침을 잰다.
+ * 홈 히어로는 360·390·430·1440 에서 좌우 16px 여백을 따로 잰다.
  * 사용: qa-shots.mjs <주소> <출력 폴더>
  */
 import { chromium } from "playwright";
@@ -42,6 +43,35 @@ for (const [width, height] of WIDTHS) {
     await page.close();
   }
   await context.close();
+}
+// 휴대폰 폭 히어로 — 배지·제목·부제·설치 칸·복사 버튼·버튼·영상 기기 틀이 좌우 16px 안에 있어야 한다.
+// 2026-11-09 사람 리뷰 「여전히 양 옆 여백 없고, 짤리는데」(세 사이트 공통 템플릿 결함) 뒤로 넣었다.
+const EDGE = 16;
+for (const width of [360, 390, 430, 1440]) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  await page.goto(base + "/", { waitUntil: "networkidle" });
+  await page.waitForTimeout(500);
+  const m = await page.evaluate(() => {
+    const r = (el) => (el ? [el.getBoundingClientRect().left, el.getBoundingClientRect().right].map((v) => Math.round(v * 10) / 10) : null);
+    const h1 = document.querySelector("h1");
+    const code = document.querySelector("#install code");
+    const row = code?.parentElement;
+    const video = document.querySelector("video");
+    return {
+      scrollWidth: document.documentElement.scrollWidth, innerWidth: window.innerWidth,
+      parts: {
+        badge: r(h1?.parentElement?.firstElementChild === h1 ? null : h1?.parentElement?.firstElementChild),
+        title: r(h1), subtitle: r(h1?.nextElementSibling), install: r(row), copy: r(row?.querySelector("button")),
+        cta: r(document.querySelector('a[href="#install"]')?.parentElement), card: r(video?.closest("div.border-4")),
+      },
+      codeClipped: code ? code.scrollWidth > code.clientWidth + 1 && getComputedStyle(code).overflowX !== "auto" : null,
+    };
+  });
+  const out = Object.entries(m.parts).filter(([, v]) => !v || v[0] < EDGE - 0.5 || v[1] > width - EDGE + 0.5).map(([k, v]) => `${k}${JSON.stringify(v)}`);
+  const bad = m.scrollWidth > m.innerWidth || out.length || m.codeClipped;
+  if (bad) problems++;
+  console.log(`히어로 ${width}: scrollWidth=${m.scrollWidth}/${m.innerWidth} 16px밖=${out.join(",") || "없음"} 명령잘림=${m.codeClipped}`);
+  await page.close();
 }
 await browser.close();
 console.log(`문제 ${problems}건`);

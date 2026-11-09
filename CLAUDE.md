@@ -8,7 +8,8 @@
 `oss-landing-template` 을 복제해 내용을 채웠다. 언어는 framenote README 를 따라 한국어다.
 제품 코드는 framenote 저장소에 있고 여기는 소개만 한다.
 
-- 영상 다시 찍기: `heavy-run -- zsh scripts/demo/record-all.sh <빈 폴더>`. 샘플 영상과 에이전트 스크립트도 `scripts/demo/` 에 있다.
+- 영상 다시 찍기: 기능 영상은 `heavy-run -- zsh scripts/demo/record-all.sh <빈 폴더>`. 샘플 영상과 에이전트 스크립트도 `scripts/demo/` 에 있다.
+  히어로(`public/demo.mp4`·`demo-poster.png`)는 brand 저장소 작품 `brand-kit/videos/framenote-promo`(climanager-demo 콘셉트 16:9 틀)에서 온다 — 다시 찍는 법은 그 작품의 CLAUDE.md.
   에이전트 자리는 LLM 이 아니라 고정 스크립트이므로 사이트 문구에 그 사실을 유지한다.
 - 로고 다시 뽑기: `python3 scripts/make-brand-assets.py` (원본 `brand/`, 생성 기록 `brand/source/*.json`).
 - 제보 버튼: `components/feedback/FeedbackWidget.tsx`(부착 타입 global), env `NEXT_PUBLIC_DP_FEEDBACK_URL`·`NEXT_PUBLIC_DP_FEEDBACK_KEY`.
