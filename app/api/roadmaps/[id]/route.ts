@@ -44,19 +44,18 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
   try {
     const body = await request.json();
-    const { title, description, status, category, date, order } = body;
+    // 보낸 칸만 바꾼다 — 예전엔 빠진 칸을 기본값(빈 목록·false·null·0)으로 덮어써서
+    // 「제목만 고치기」가 나머지 내용을 지웠다(2026-11-09 발견). 스킬 문서의 수정 예시는 일부 칸만 보낸다.
+    const ALLOWED = ["title", "description", "status", "category", "date", "order"] as const;
+    const updates: Record<string, unknown> = {};
+    for (const key of ALLOWED) if (key in body) updates[key] = body[key];
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: "No updatable fields" }, { status: 400 });
+    }
 
     const result = await db
       .update(roadmaps)
-      .set({
-        title,
-        description,
-        status: status || "planned",
-        category,
-        date: date || null,
-        order: order || 0,
-        updatedAt: new Date(),
-      })
+      .set({ ...updates, updatedAt: new Date() })
       .where(eq(roadmaps.id, parseInt(id)))
       .returning();
 
@@ -108,3 +107,6 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     );
   }
 }
+
+// 스킬 문서와 이미 복제된 사이트가 PATCH 로 부르기도 해서 같은 동작으로 받는다.
+export const PATCH = PUT;
